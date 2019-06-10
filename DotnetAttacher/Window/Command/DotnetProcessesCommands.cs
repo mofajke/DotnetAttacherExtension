@@ -9,19 +9,19 @@ namespace DotnetAttacher.Window
     public partial class DotnetProcessesViewModel
     {
         public DelegateCommand RefreshCommand { get; set; }
-        public DelegateCommand<DotnetProcess> AttachCommand { get; set; }
-        public DelegateCommand<DotnetProcess> SelectCommand { get; set; }
-        public DelegateCommand<DialogWindow> CancelCommand { get; set; }
-        public DelegateCommand<DialogWindow> LoadedWindowCommand { get; set; }
-        public DelegateCommand<DotnetProcess> DetachCommand { get; set; }
+        public DelegateCommand AttachCommand { get; set; }
+        public DelegateCommand SelectCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+        public DelegateCommand LoadedWindowCommand { get; set; }
+        public DelegateCommand DetachCommand { get; set; }
 
         private void InitCommands()
         {
-            RefreshCommand = new DelegateCommand(() =>
+            RefreshCommand = new DelegateCommand((object o) =>
             {
                 LoadDotnetProcesses();
             });
-            AttachCommand = new DelegateCommand<DotnetProcess>((e) =>
+            AttachCommand = new DelegateCommand((object o) =>
             {
                 var proc = SelectedDotnetProcess;
                 if (proc == null) return;
@@ -41,7 +41,7 @@ namespace DotnetAttacher.Window
                 if (aliveProc?.Id <= 0) return;
                 AttachToProcess(proc);
             });
-            DetachCommand = new DelegateCommand<DotnetProcess>((e) =>
+            DetachCommand = new DelegateCommand((object o) =>
             {
                 var proc = SelectedDotnetProcess;
                 if (proc == null) return;
@@ -61,20 +61,22 @@ namespace DotnetAttacher.Window
                 if (aliveProc?.Id <= 0) return;
                 DetachToProcess(proc);
             });
-            SelectCommand = new DelegateCommand<DotnetProcess>((proc) =>
+            SelectCommand = new DelegateCommand((object o) =>
             {
+                var proc = o as DotnetProcess;
                 if (proc != null && proc.Id > 0)
                 {
                     SelectedDotnetProcess = proc;
                 }
             });
-            CancelCommand = new DelegateCommand<DialogWindow>((window) =>
+            CancelCommand = new DelegateCommand((object o) =>
             {
+                var window = o as DialogWindow;
                 window?.Close();
             });
-            LoadedWindowCommand = new DelegateCommand<DialogWindow>((window) =>
+            LoadedWindowCommand = new DelegateCommand((object o) =>
             {
-                loadedWindow = window;
+                loadedWindow = o as DialogWindow;
                 LoadDotnetProcesses();
             });
         }
